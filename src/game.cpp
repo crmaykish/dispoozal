@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include "logger.hpp"
 #include "player.hpp"
+#include "spawner.hpp"
 
 void Game::Init()
 {
@@ -14,6 +15,18 @@ void Game::Init()
     auto player = std::make_shared<Player>();
     player->SetMainTexture(Render.LoadTexture("assets/player.png"));
     Objects.push_back(player);
+
+    // Add enemy spawner
+
+    auto spawner0 = std::make_shared<Spawner>(Point{100, 600});
+    spawner0->SetMainTexture(Render.LoadTexture("assets/spawner.png"));
+    spawner0->SetEnemyTexture(Render.LoadTexture("assets/enemy.png"));
+    Objects.push_back(spawner0);
+
+    auto spawner1 = std::make_shared<Spawner>(Point{900, 600});
+    spawner1->SetMainTexture(Render.LoadTexture("assets/spawner.png"));
+    spawner1->SetEnemyTexture(Render.LoadTexture("assets/enemy.png"));
+    Objects.push_back(spawner1);
 }
 
 void Game::Loop()

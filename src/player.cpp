@@ -31,6 +31,9 @@ void Player::Update(GameState &state)
         Flip = !Flip;
         FlipTimer.Reset();
     }
+
+    // Update player position in the game state
+    state.SetPlayerPosition(Position);
 }
 
 void Player::Render(SDLRenderer &renderer)
