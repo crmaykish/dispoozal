@@ -1,6 +1,8 @@
 #include "renderer.hpp"
 #include "logger.hpp"
 
+const std::string WINDOW_TITLE = "Dissipation";
+
 static SDL_Rect ConvertRect(Rectangle r, bool flipAndScale = false)
 {
     SDL_Rect n = {(int)std::round(r.pos.x),
@@ -33,7 +35,7 @@ void SDLRenderer::Init()
     }
 
     // Create the SDL Window
-    SDLWin = SDL_CreateWindow("Space Junk",
+    SDLWin = SDL_CreateWindow(WINDOW_TITLE.c_str(),
                               0, 0,
                               RESOLUTION_W, RESOLUTION_H,
                               SDL_WINDOW_SHOWN);
@@ -107,7 +109,8 @@ void SDLRenderer::RenderWholeTextureRotate(std::shared_ptr<Texture> texture, Rec
 {
     SDL_Rect d = ConvertRect(dest, true);
     SDL_Point c = {(int)center.x, (int)center.y};
-    SDL_RenderCopyEx(SDLRender, texture->GetSDLTexture(), NULL, &d, angle, &c, SDL_FLIP_NONE);
+    // Note: angle is negative becacause world coordinates are upside down from rendering coordinates
+    SDL_RenderCopyEx(SDLRender, texture->GetSDLTexture(), NULL, &d, -angle, &c, SDL_FLIP_NONE);
 }
 
 void SDLRenderer::RenderTexture(std::shared_ptr<Texture> texture, Rectangle source, Rectangle dest)

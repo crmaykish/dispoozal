@@ -1,12 +1,19 @@
+#include <algorithm>
 #include <chrono>
 #include "game.hpp"
 #include "logger.hpp"
+#include "player.hpp"
 
 void Game::Init()
 {
     Log("Initializing game", LOG_INFO);
 
     Render.Init();
+
+    // Add player
+    auto player = std::make_shared<Player>();
+    player->SetMainTexture(Render.LoadTexture("assets/player.png"));
+    Objects.push_back(player);
 }
 
 void Game::Loop()
@@ -25,25 +32,30 @@ void Game::Loop()
         previousTime = currentTime;
         lag += elapsedTime;
 
-        Input.PollForInput();
+        State.GetInput().PollForInput();
 
         while (lag >= TIME_PER_TICK)
         {
             // TODO: Update game state based on user input
             // TODO: Update game objects
 
-            // Cleanup inactive objects
-            // for (int i = 0; i < Objects.size(); i++)
-            // {
-            //     // TODO: Don't do this every tick, once every few seconds is probably enough
-            //     Objects.erase(
-            //         std::remove_if(Objects.begin(),
-            //                        Objects.end(),
-            //                        [](std::shared_ptr<GameObject> o) { return !o->IsActive(); }),
-            //         Objects.end());
-            // }
+            for (auto o : Objects)
+            {
+                o->Update(State);
+            }
 
-            if (Input.Quit)
+            // Cleanup inactive objects
+            for (int i = 0; i < Objects.size(); i++)
+            {
+                // TODO: Don't do this every tick, once every few seconds is probably enough
+                Objects.erase(
+                    std::remove_if(Objects.begin(),
+                                   Objects.end(),
+                                   [](std::shared_ptr<GameObject> o) { return !o->IsActive(); }),
+                    Objects.end());
+            }
+
+            if (State.GetInput().Quit)
             {
                 Running = false;
             }
@@ -55,10 +67,14 @@ void Game::Loop()
 
         Render.Clear();
 
-        // TODO: render objects
+        for (auto &o : Objects)
+        {
+            o->Render(Render);
+        }
 
         // Draw cursor
-        Render.RenderRectangle({Input.Cursor, float(TEXTURE_SCALE), float(TEXTURE_SCALE)}, FG_COLOR.r, FG_COLOR.g, FG_COLOR.b, FG_COLOR.r);
+        Point cursorPosition = State.GetInput().Cursor;
+        Render.RenderRectangle({cursorPosition, float(TEXTURE_SCALE), float(TEXTURE_SCALE)}, FG_COLOR.r, FG_COLOR.g, FG_COLOR.b, FG_COLOR.r);
 
         Render.Present();
     }
