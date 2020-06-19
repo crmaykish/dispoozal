@@ -10,6 +10,7 @@
 #include "spawner.hpp"
 #include "enemy.hpp"
 #include "projectile.hpp"
+#include "font.hpp"
 
 const double TICK_RATE = 60;
 const auto TIME_PER_TICK = std::chrono::duration<double>(1.0 / TICK_RATE);
@@ -20,6 +21,8 @@ private:
     bool Running;
     GameState State;
     SDLRenderer Renderer;
+
+    std::shared_ptr<MyFont> UIFont;
 
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Spawner>> Spawners;
@@ -32,6 +35,8 @@ private:
     void Update();
     void Render();
     void Cleanup();
+
+    void Reset();
 
     void HandlePlayerCollisions(std::shared_ptr<Projectile> projectile);
     void HandleEnemyCollisions(std::shared_ptr<Projectile> projectile);

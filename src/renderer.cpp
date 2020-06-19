@@ -6,9 +6,9 @@ const std::string WINDOW_TITLE = "Dissipation";
 static SDL_Rect ConvertRect(Rectangle r, bool flipAndScale = false)
 {
     SDL_Rect n = {(int)std::round(r.pos.x),
-            (int)std::round(r.pos.y),
-            (int)std::round(r.size.w),
-            (int)std::round(r.size.h)};
+                  (int)std::round(r.pos.y),
+                  (int)std::round(r.size.w),
+                  (int)std::round(r.size.h)};
 
     if (flipAndScale)
     {
@@ -33,6 +33,8 @@ void SDLRenderer::Init()
         Log("Failed to initialize SDL: " + std::string(SDL_GetError()), LOG_ERROR);
         exit(1);
     }
+
+    TTF_Init();
 
     // Create the SDL Window
     SDLWin = SDL_CreateWindow(WINDOW_TITLE.c_str(),
@@ -129,6 +131,21 @@ void SDLRenderer::RenderTextureRotate(std::shared_ptr<Texture> texture, Rectangl
     SDL_RenderCopyEx(SDLRender, texture->GetSDLTexture(), &s, &d, -angle, &c, SDL_FLIP_NONE);
 }
 
+void SDLRenderer::RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest)
+{
+    SDL_Surface *s = TTF_RenderText_Blended(font->GetSDLFont(), text.c_str(), FG_COLOR);
+    SDL_Texture *t = SDL_CreateTextureFromSurface(SDLRender, s);
+
+    SDL_Rect r = ConvertRect(dest, true);
+
+    SDL_RenderCopy(SDLRender, t, NULL, &r);
+
+    SDL_FreeSurface(s);
+    SDL_DestroyTexture(t);
+
+    TTF_RenderText_Solid(font->GetSDLFont(), text.c_str(), FG_COLOR);
+}
+
 std::shared_ptr<Texture> SDLRenderer::LoadTexture(std::string fileName)
 {
     return std::make_shared<Texture>(IMG_LoadTexture(SDLRender, fileName.c_str()));
@@ -137,4 +154,10 @@ std::shared_ptr<Texture> SDLRenderer::LoadTexture(std::string fileName)
 
     // // This could probably be more efficient;
     // return TextureMap.at(fileName);
+}
+
+std::shared_ptr<MyFont> SDLRenderer::LoadFont(std::string fileName)
+{
+    TTF_Font *font = TTF_OpenFont(fileName.c_str(), 80);
+    return std::make_shared<MyFont>(font);
 }

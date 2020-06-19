@@ -11,7 +11,7 @@ class Enemy : public GameObject
 protected:
     std::shared_ptr<Texture> MainTexture;
     float MoveSpeed = 1.0;
-    float ProjectileSpeed = 10.0;
+    float ProjectileSpeed = 8.0;
 
     GameTimer FireTimer;
 

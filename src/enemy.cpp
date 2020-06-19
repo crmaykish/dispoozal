@@ -2,7 +2,7 @@
 
 Enemy::Enemy(Point position,
              std::vector<std::shared_ptr<Projectile>> &projectiles)
-    : FireTimer(300), Projectiles(projectiles), GameObject()
+    : FireTimer(1000), Projectiles(projectiles), GameObject()
 {
     Position = position;
     Bound = {48, 48};

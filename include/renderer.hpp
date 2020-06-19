@@ -6,6 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include "game_geometry.hpp"
 #include "texture.hpp"
+#include "font.hpp"
 #include "settings.hpp"
 
 const SDL_Color BG_COLOR = {0x0F, 0x38, 0x0F, 0xFF};
@@ -29,7 +30,10 @@ public:
     void RenderTexture(std::shared_ptr<Texture> texture, Rectangle source, Rectangle dest);
     void RenderTextureRotate(std::shared_ptr<Texture> texture, Rectangle source, Rectangle dest, float angle, Point center);
 
+    void RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest);
+
     std::shared_ptr<Texture> LoadTexture(std::string fileName);
+    std::shared_ptr<MyFont> LoadFont(std::string fileName);
 };
 
 #endif // RENDERER_H

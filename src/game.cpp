@@ -16,16 +16,13 @@ void Game::Init()
 
     Renderer.Init();
 
+    UIFont = Renderer.LoadFont("assets/BitPap.ttf");
+
     // Add player
     PlayerOne = std::make_shared<Player>();
     PlayerOne->SetMainTexture(Renderer.LoadTexture("assets/player.png"));
 
-    // Add enemy spawner
-    auto spawner0 = std::make_shared<Spawner>(Point{100, 600}, Enemies, Projectiles);
-    spawner0->SetMainTexture(Renderer.LoadTexture("assets/spawner.png"));
-    spawner0->SetEnemyTexture(Renderer.LoadTexture("assets/enemy.png"));
-
-    Spawners.push_back(spawner0);
+    Reset();
 }
 
 void Game::Loop()
@@ -161,6 +158,14 @@ void Game::Render()
         p->Render(Renderer);
     }
 
+    // Render game over screen
+    if (State.Status == STATUS_GAMEOVER)
+    {
+        Rectangle textRectangle = {(WORLDSIZE_W - 600) / 2, (WORLDSIZE_H - 100) / 2, 600, 100};
+
+        Renderer.RenderFont(UIFont, "GAME OVER", textRectangle);
+    }
+
     // Render cursor
     Point cursorPosition = State.GetInput().Cursor;
     Renderer.RenderRectangle({cursorPosition, float(TEXTURE_SCALE), float(TEXTURE_SCALE)}, FG_COLOR.r, FG_COLOR.g, FG_COLOR.b, FG_COLOR.r);
@@ -198,6 +203,24 @@ void Game::Cleanup()
                            [](std::shared_ptr<Projectile> o) { return !o->IsActive(); }),
             Projectiles.end());
     }
+}
+
+void Game::Reset()
+{
+    Spawners.clear();
+    Enemies.clear();
+    Projectiles.clear();
+
+    // Add enemy spawner
+    auto spawner0 = std::make_shared<Spawner>(Point{100, 600}, Enemies, Projectiles);
+    spawner0->SetMainTexture(Renderer.LoadTexture("assets/spawner.png"));
+    spawner0->SetEnemyTexture(Renderer.LoadTexture("assets/enemy.png"));
+    Spawners.push_back(spawner0);
+
+    auto spawner1 = std::make_shared<Spawner>(Point{800, 200}, Enemies, Projectiles);
+    spawner1->SetMainTexture(Renderer.LoadTexture("assets/spawner.png"));
+    spawner1->SetEnemyTexture(Renderer.LoadTexture("assets/enemy.png"));
+    Spawners.push_back(spawner1);
 }
 
 void Game::HandlePlayerCollisions(std::shared_ptr<Projectile> projectile)
