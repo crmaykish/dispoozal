@@ -21,7 +21,6 @@ public:
     virtual void Render(SDLRenderer &renderer);
     Rectangle GetHitBox();
     bool IsActive();
-    
 };
 
 #endif // GAME_OBJECT_H

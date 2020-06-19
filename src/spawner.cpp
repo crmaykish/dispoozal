@@ -1,6 +1,6 @@
 #include "spawner.hpp"
 
-Spawner::Spawner(Point position) : SpawnTimer(1000), GameObject()
+Spawner::Spawner(Point position) : SpawnTimer(4000), GameObject()
 {
     Position = position;
     Bound = {128, 128};
