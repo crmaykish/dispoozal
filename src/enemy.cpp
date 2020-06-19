@@ -1,6 +1,8 @@
 #include "enemy.hpp"
 
-Enemy::Enemy(Point position) : FireTimer(300), GameObject()
+Enemy::Enemy(Point position,
+             std::vector<std::shared_ptr<Projectile>> &projectiles)
+    : FireTimer(300), Projectiles(projectiles), GameObject()
 {
     Position = position;
     Bound = {48, 48};
@@ -18,28 +20,16 @@ void Enemy::Update(GameState &state)
 
     // Constantly fire at the player
     if (FireTimer.IsExpired())
-    {   
+    {
         Vector2D projectileVelocity = vectorToPlayer.Scale(ProjectileSpeed);
         auto projectile = std::make_shared<Projectile>(Position, projectileVelocity);
         Projectiles.push_back(projectile);
         FireTimer.Reset();
     }
-
-    // Update projectiles
-    for (auto p : Projectiles)
-    {
-        p->Update(state);
-    }
 }
 
 void Enemy::Render(SDLRenderer &renderer)
 {
-    // Render projectiles
-    for (auto p : Projectiles)
-    {
-        p->Render(renderer);
-    }
-
     renderer.RenderWholeTexture(MainTexture, GetHitBox());
 }
 

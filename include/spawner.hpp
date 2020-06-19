@@ -11,12 +11,15 @@ class Spawner : public GameObject
 protected:
     std::shared_ptr<Texture> MainTexture;
     std::shared_ptr<Texture> EnemyTexture;
-    std::vector<std::shared_ptr<Enemy>> Enemies;
+    std::vector<std::shared_ptr<Enemy>> &Enemies;
+    std::vector<std::shared_ptr<Projectile>> &Projectiles;
 
     GameTimer SpawnTimer;
 
 public:
-    Spawner(Point position);
+    Spawner(Point position,
+            std::vector<std::shared_ptr<Enemy>> &enemies,
+            std::vector<std::shared_ptr<Projectile>> &projectiles);
 
     void Update(GameState &state) override;
     void Render(SDLRenderer &renderer) override;

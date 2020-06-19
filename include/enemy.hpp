@@ -15,10 +15,10 @@ protected:
 
     GameTimer FireTimer;
 
-    std::vector<std::shared_ptr<Projectile>> Projectiles;
+    std::vector<std::shared_ptr<Projectile>> &Projectiles;
 
 public:
-    Enemy(Point position);
+    Enemy(Point position, std::vector<std::shared_ptr<Projectile>> &projectiles);
 
     void Update(GameState &state) override;
     void Render(SDLRenderer &renderer) override;

@@ -1,6 +1,9 @@
 #include "spawner.hpp"
 
-Spawner::Spawner(Point position) : SpawnTimer(4000), GameObject()
+Spawner::Spawner(Point position,
+                 std::vector<std::shared_ptr<Enemy>> &enemies,
+                 std::vector<std::shared_ptr<Projectile>> &projectiles)
+    : SpawnTimer(4000), Enemies(enemies), Projectiles(projectiles), GameObject()
 {
     Position = position;
     Bound = {128, 128};
@@ -10,17 +13,11 @@ Spawner::Spawner(Point position) : SpawnTimer(4000), GameObject()
 
 void Spawner::Update(GameState &state)
 {
-    // Update enemies under spawner control
-    for (auto e : Enemies)
-    {
-        e->Update(state);
-    }
-
     // Spawn additional enemies
     if (SpawnTimer.IsExpired())
     {
         Point enemyPosition = Position + Point{0, -100};
-        auto ne = std::make_shared<Enemy>(enemyPosition);
+        auto ne = std::make_shared<Enemy>(enemyPosition, Projectiles);
         ne->SetMainTexture(EnemyTexture);
 
         Enemies.push_back(ne);
@@ -32,11 +29,6 @@ void Spawner::Update(GameState &state)
 void Spawner::Render(SDLRenderer &renderer)
 {
     renderer.RenderWholeTexture(MainTexture, GetHitBox());
-
-    for (auto e : Enemies)
-    {
-        e->Render(renderer);
-    }
 }
 
 void Spawner::SetMainTexture(std::shared_ptr<Texture> mainTexture)

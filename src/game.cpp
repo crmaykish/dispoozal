@@ -9,24 +9,25 @@ void Game::Init()
 {
     Log("Initializing game", LOG_INFO);
 
-    Render.Init();
+    Renderer.Init();
 
     // Add player
-    auto player = std::make_shared<Player>();
-    player->SetMainTexture(Render.LoadTexture("assets/player.png"));
-    Objects.push_back(player);
+    auto p1 = std::make_shared<Player>();
+    p1->SetMainTexture(Renderer.LoadTexture("assets/player.png"));
+    PlayerOne = p1;
 
     // Add enemy spawner
+    auto spawner0 = std::make_shared<Spawner>(Point{100, 600}, Enemies, Projectiles);
+    spawner0->SetMainTexture(Renderer.LoadTexture("assets/spawner.png"));
+    spawner0->SetEnemyTexture(Renderer.LoadTexture("assets/enemy.png"));
 
-    auto spawner0 = std::make_shared<Spawner>(Point{100, 600});
-    spawner0->SetMainTexture(Render.LoadTexture("assets/spawner.png"));
-    spawner0->SetEnemyTexture(Render.LoadTexture("assets/enemy.png"));
-    Objects.push_back(spawner0);
+    Spawners.push_back(spawner0);
 
-    auto spawner1 = std::make_shared<Spawner>(Point{900, 600});
-    spawner1->SetMainTexture(Render.LoadTexture("assets/spawner.png"));
-    spawner1->SetEnemyTexture(Render.LoadTexture("assets/enemy.png"));
-    Objects.push_back(spawner1);
+    auto spawner1 = std::make_shared<Spawner>(Point{900, 600}, Enemies, Projectiles);
+    spawner1->SetMainTexture(Renderer.LoadTexture("assets/spawner.png"));
+    spawner1->SetEnemyTexture(Renderer.LoadTexture("assets/enemy.png"));
+
+    Spawners.push_back(spawner1);
 }
 
 void Game::Loop()
@@ -49,24 +50,18 @@ void Game::Loop()
 
         while (lag >= TIME_PER_TICK)
         {
-            // TODO: Update game state based on user input
-            // TODO: Update game objects
-
-            for (auto o : Objects)
-            {
-                o->Update(State);
-            }
+            Update();
 
             // Cleanup inactive objects
-            for (int i = 0; i < Objects.size(); i++)
-            {
-                // TODO: Don't do this every tick, once every few seconds is probably enough
-                Objects.erase(
-                    std::remove_if(Objects.begin(),
-                                   Objects.end(),
-                                   [](std::shared_ptr<GameObject> o) { return !o->IsActive(); }),
-                    Objects.end());
-            }
+            // for (int i = 0; i < Objects.size(); i++)
+            // {
+            //     // TODO: Don't do this every tick, once every few seconds is probably enough
+            //     Objects.erase(
+            //         std::remove_if(Objects.begin(),
+            //                        Objects.end(),
+            //                        [](std::shared_ptr<GameObject> o) { return !o->IsActive(); }),
+            //         Objects.end());
+            // }
 
             if (State.GetInput().Quit)
             {
@@ -76,24 +71,60 @@ void Game::Loop()
             lag -= TIME_PER_TICK;
         }
 
-        // RENDER
-
-        Render.Clear();
-
-        for (auto &o : Objects)
-        {
-            o->Render(Render);
-        }
-
-        // Draw cursor
-        Point cursorPosition = State.GetInput().Cursor;
-        Render.RenderRectangle({cursorPosition, float(TEXTURE_SCALE), float(TEXTURE_SCALE)}, FG_COLOR.r, FG_COLOR.g, FG_COLOR.b, FG_COLOR.r);
-
-        Render.Present();
+        Render();
     }
 }
 
 void Game::Close()
 {
     Log("Closing game", LOG_INFO);
+}
+
+void Game::Update()
+{
+    PlayerOne->Update(State);
+
+    for (auto s : Spawners)
+    {
+        s->Update(State);
+    }
+
+    for (auto e : Enemies)
+    {
+        e->Update(State);
+    }
+
+    for (auto p : Projectiles)
+    {
+        p->Update(State);
+    }
+}
+
+void Game::Render()
+{
+    Renderer.Clear();
+
+    // Render objects
+    PlayerOne->Render(Renderer);
+
+    for (auto s : Spawners)
+    {
+        s->Render(Renderer);
+    }
+
+    for (auto e : Enemies)
+    {
+        e->Render(Renderer);
+    }
+
+    for (auto p : Projectiles)
+    {
+        p->Render(Renderer);
+    }
+
+    // Render cursor
+    Point cursorPosition = State.GetInput().Cursor;
+    Renderer.RenderRectangle({cursorPosition, float(TEXTURE_SCALE), float(TEXTURE_SCALE)}, FG_COLOR.r, FG_COLOR.g, FG_COLOR.b, FG_COLOR.r);
+
+    Renderer.Present();
 }
