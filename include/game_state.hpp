@@ -5,12 +5,21 @@
 #include <memory>
 #include "user_input.hpp"
 
+enum GameStatus
+{
+    STATUS_UNKNOWN,
+    STATUS_RUNNING,
+    STATUS_GAMEOVER
+};
+
 class GameState
 {
 private:
     UserInputState Input;
-    Point PlayerPosition;   // This is really more like the enemy target destination
+    Point PlayerPosition; // This is really more like the enemy target destination
 public:
+    GameStatus Status = STATUS_UNKNOWN;
+
     GameState();
     UserInputState &GetInput();
 

@@ -20,15 +20,26 @@ private:
     bool Running;
     GameState State;
     SDLRenderer Renderer;
+
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Spawner>> Spawners;
     std::vector<std::shared_ptr<Enemy>> Enemies;
     std::vector<std::shared_ptr<Projectile>> Projectiles;
+    std::vector<std::shared_ptr<Projectile>> PlayerProjectiles;
+
+    GameTimer CleanupTimer;
 
     void Update();
     void Render();
+    void Cleanup();
+
+    void HandlePlayerCollisions(std::shared_ptr<Projectile> projectile);
+    void HandleEnemyCollisions(std::shared_ptr<Projectile> projectile);
+    void HandleSpawnerCollisions(std::shared_ptr<Projectile> projectile);
 
 public:
+    Game();
+
     void Init();
     void Loop();
     void Close();

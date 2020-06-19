@@ -68,17 +68,31 @@ Vector2D Vector2D::Rotate(float angle)
     return Vector2D(Magnitude, Angle + angle);
 }
 
+// Return an angle between -Pi and Pi
 static float VectorAngle(Point p)
 {
-    if (p.x >= 0.0)
+    // TODO: this could be massively simplified
+    float angle = 0.0;
+
+    if (p.x >= 0.0 && p.y >= 0.0)
     {
-        return std::atan(p.y / p.x);
+        angle = std::atan(p.y / p.x);
+    }
+    else if (p.x >= 0.0 && p.y < 0.0)
+    {
+        angle = std::atan(p.y / p.x) + (360.0 * TO_RADS);
     }
     else
     {
-        // TODO: I think this is subtracting an extra rotation
-        return std::atan(p.y / p.x) - (180.0 * TO_RADS);
+        angle = std::atan(p.y / p.x) + (180.0 * TO_RADS);
     }
+
+    if (angle > Pi)
+    {
+        angle -= (2 * Pi);
+    }
+
+    return angle;
 }
 
 static float VectorMagnitude(Point p)

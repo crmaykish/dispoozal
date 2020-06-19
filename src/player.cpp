@@ -8,6 +8,9 @@ Player::Player() : FlipTimer(250), GameObject()
     Bound = {64, 64};
 
     FlipTimer.Reset();
+
+    MaxHP = 100;
+    HP = MaxHP;
 }
 
 void Player::Update(GameState &state)
@@ -46,4 +49,14 @@ void Player::Render(SDLRenderer &renderer)
 void Player::SetMainTexture(std::shared_ptr<Texture> mainTexture)
 {
     MainTexture = mainTexture;
+}
+
+float Player::GetRotation()
+{
+    return Rotation;
+}
+
+bool Player::GetFlip()
+{
+    return Flip;
 }

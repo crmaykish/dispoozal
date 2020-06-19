@@ -9,10 +9,18 @@ Spawner::Spawner(Point position,
     Bound = {128, 128};
 
     SpawnTimer.Reset();
+
+    MaxHP = 200;
+    HP = MaxHP;
 }
 
 void Spawner::Update(GameState &state)
 {
+    if (!Active)
+    {
+        return;
+    }
+
     // Spawn additional enemies
     if (SpawnTimer.IsExpired())
     {
@@ -24,10 +32,20 @@ void Spawner::Update(GameState &state)
 
         SpawnTimer.Reset();
     }
+
+    if (!IsAlive())
+    {
+        Active = false;
+    }
 }
 
 void Spawner::Render(SDLRenderer &renderer)
 {
+    if (!Active)
+    {
+        return;
+    }
+
     renderer.RenderWholeTexture(MainTexture, GetHitBox());
 }
 

@@ -8,10 +8,18 @@ Enemy::Enemy(Point position,
     Bound = {48, 48};
 
     FireTimer.Reset();
+
+    MaxHP = 30;
+    HP = MaxHP;
 }
 
 void Enemy::Update(GameState &state)
 {
+    if (!Active)
+    {
+        return;
+    }
+
     auto vectorToPlayer = Vector2D(state.GetPlayerPosition() - Position).Normalize();
 
     // Chase the player
@@ -26,10 +34,20 @@ void Enemy::Update(GameState &state)
         Projectiles.push_back(projectile);
         FireTimer.Reset();
     }
+
+    if (!IsAlive())
+    {
+        Active = false;
+    }
 }
 
 void Enemy::Render(SDLRenderer &renderer)
 {
+    if (!Active)
+    {
+        return;
+    }
+
     renderer.RenderWholeTexture(MainTexture, GetHitBox());
 }
 

@@ -22,6 +22,9 @@ public:
     void Render(SDLRenderer &renderer) override;
 
     void SetMainTexture(std::shared_ptr<Texture> mainTexture);
+
+    float GetRotation();
+    bool GetFlip();
 };
 
 #endif // PLAYER_H

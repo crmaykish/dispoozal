@@ -28,3 +28,38 @@ bool GameObject::IsActive()
 {
     return Active;
 }
+
+void GameObject::Deactivate()
+{
+    Active = false;
+}
+
+Point GameObject::GetPosition()
+{
+    return Position;
+}
+
+Vector2D GameObject::GetVelocity()
+{
+    return Velocity;
+}
+
+void GameObject::SetVelocity(Vector2D velocity)
+{
+    Velocity = velocity;
+}
+
+void GameObject::Damage(int damage)
+{
+    HP -= damage;
+
+    if (HP < 0)
+    {
+        HP = 0;
+    }
+}
+
+bool GameObject::IsAlive()
+{
+    return HP > 0;
+}
