@@ -4,8 +4,8 @@
 
 Player::Player() : FlipTimer(250), GameObject()
 {
-    Position = {100, 100};
-    Bound = {64, 64};
+    Bound = {8 * TEXTURE_SCALE, 8 * TEXTURE_SCALE};
+    Position = {WORLDSIZE_W / 2, WORLDSIZE_H / 2};
 
     FlipTimer.Reset();
 
@@ -17,33 +17,19 @@ void Player::Update(GameState &state)
 {
     auto input = state.GetInput();
 
-    // Movement
-    auto moveVector = WASDToMovementVector(input.Up, input.Down, input.Left, input.Right);
+    Vector2D keyVector = WASDToMovementVector(input.Up, input.Down, input.Left, input.Right);
 
-    // TODO: add a bit of accel/decel to player movement
-
-    Velocity = moveVector.Scale(MoveSpeed);
-    Position = Position + Velocity.GetPoint();
-
-    // Angle
-    Rotation = Vector2D(input.Cursor - Position).GetAngle();
-
-    // Flip
-    if (input.FireMain && FlipTimer.IsExpired())
+    if (keyVector.GetMagnitude() > 0.001)
     {
-        Flip = !Flip;
-        FlipTimer.Reset();
+        Rotation = keyVector.GetAngle();
     }
 
-    // Update player position in the game state
-    state.SetPlayerPosition(Position);
+    // Rotation = Vector2D(input.Cursor - Position).GetAngle();
 }
 
 void Player::Render(SDLRenderer &renderer)
 {
-    float angle = Flip ? Rotation + Pi : Rotation;
-
-    renderer.RenderWholeTextureRotate(MainTexture, GetHitBox(), angle * TO_DEGS, {Bound.w / 2, Bound.h / 2});
+    renderer.RenderWholeTextureRotate(MainTexture, GetHitBox(), Rotation * TO_DEGS, {Bound.w / 2, Bound.h / 2});
 }
 
 void Player::SetMainTexture(std::shared_ptr<Texture> mainTexture)

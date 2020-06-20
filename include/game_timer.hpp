@@ -14,6 +14,8 @@ public:
     GameTimer(int timeoutMS);
     void Reset();
     bool IsExpired();
+
+    void SetTimeout(int timeoutMS);
 };
 
 #endif // GAME_TIMER_HPP

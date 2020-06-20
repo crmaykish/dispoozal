@@ -7,9 +7,7 @@
 #include "game_state.hpp"
 #include "renderer.hpp"
 #include "player.hpp"
-#include "spawner.hpp"
 #include "enemy.hpp"
-#include "projectile.hpp"
 #include "font.hpp"
 
 const double TICK_RATE = 60;
@@ -24,11 +22,15 @@ private:
 
     std::shared_ptr<MyFont> UIFont;
 
+    std::shared_ptr<Texture> OverlayTexture;
+    std::shared_ptr<Texture> EnemyTexture;
+
     std::shared_ptr<Player> PlayerOne;
-    std::vector<std::shared_ptr<Spawner>> Spawners;
     std::vector<std::shared_ptr<Enemy>> Enemies;
-    std::vector<std::shared_ptr<Projectile>> Projectiles;
-    std::vector<std::shared_ptr<Projectile>> PlayerProjectiles;
+
+    GameTimer FireTimer;
+
+    int startingTimeout = 1000;
 
     GameTimer CleanupTimer;
 
@@ -38,9 +40,9 @@ private:
 
     void Reset();
 
-    void HandlePlayerCollisions(std::shared_ptr<Projectile> projectile);
-    void HandleEnemyCollisions(std::shared_ptr<Projectile> projectile);
-    void HandleSpawnerCollisions(std::shared_ptr<Projectile> projectile);
+    // void HandlePlayerCollisions(std::shared_ptr<Projectile> projectile);
+    // void HandleEnemyCollisions(std::shared_ptr<Projectile> projectile);
+    // void HandleSpawnerCollisions(std::shared_ptr<Projectile> projectile);
 
 public:
     Game();

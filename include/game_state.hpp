@@ -16,15 +16,14 @@ class GameState
 {
 private:
     UserInputState Input;
-    Point PlayerPosition; // This is really more like the enemy target destination
 public:
     GameStatus Status = STATUS_UNKNOWN;
 
+    int Score = 0;
+    int Level = 1;
+
     GameState();
     UserInputState &GetInput();
-
-    void SetPlayerPosition(Point position);
-    Point GetPlayerPosition();
 };
 
 #endif // GAME_STATE_H

@@ -1,11 +1,10 @@
 #include "enemy.hpp"
 
-Enemy::Enemy(Point position,
-             std::vector<std::shared_ptr<Projectile>> &projectiles)
-    : FireTimer(1000), Projectiles(projectiles), GameObject()
+Enemy::Enemy(Point position)
+    : FireTimer(1000), GameObject()
 {
     Position = position;
-    Bound = {48, 48};
+    Bound = {8 * TEXTURE_SCALE, 8 * TEXTURE_SCALE};
 
     FireTimer.Reset();
 
@@ -20,20 +19,22 @@ void Enemy::Update(GameState &state)
         return;
     }
 
-    auto vectorToPlayer = Vector2D(state.GetPlayerPosition() - Position).Normalize();
+    Point center = {WORLDSIZE_W / 2, WORLDSIZE_H / 2};
+
+    auto vectorToPlayer = Vector2D(center - Position).Normalize();
 
     // Chase the player
     Velocity = vectorToPlayer.Scale(MoveSpeed);
     Position = Position + Velocity.GetPoint();
 
     // Constantly fire at the player
-    if (FireTimer.IsExpired())
-    {
-        Vector2D projectileVelocity = vectorToPlayer.Scale(ProjectileSpeed);
-        auto projectile = std::make_shared<Projectile>(Position, projectileVelocity);
-        Projectiles.push_back(projectile);
-        FireTimer.Reset();
-    }
+    // if (FireTimer.IsExpired())
+    // {
+    //     Vector2D projectileVelocity = vectorToPlayer.Scale(ProjectileSpeed);
+    //     auto projectile = std::make_shared<Projectile>(Position, projectileVelocity);
+    //     Projectiles.push_back(projectile);
+    //     FireTimer.Reset();
+    // }
 
     if (!IsAlive())
     {
