@@ -18,6 +18,8 @@ void Game::Init()
     // Seed the random number generator
     srand(time(NULL));
 
+    DB.Open();
+
     Renderer.Init();
 
     // Load resources
@@ -171,6 +173,14 @@ void Game::Update()
             else
             {
                 State.Status = STATUS_GAMEOVER;
+
+                if (State.Score > State.BestScore)
+                {
+                    // Update best score
+                    State.BestScore = State.Score;
+
+                    DB.AddScore(SelectedDifficulty, State.Score);
+                }
             }
 
             e->Deactivate();
@@ -230,13 +240,8 @@ void Game::Cleanup()
 
 void Game::Reset()
 {
-    if (State.Score > State.BestScore)
-    {
-        // Update best score
-        State.BestScore = State.Score;
-    }
-
     State.Score = 0;
+    State.BestScore = DB.GetHighScore(SelectedDifficulty);
 
     FireTimer.SetTimeout(1000);
     FireTimer.Reset();

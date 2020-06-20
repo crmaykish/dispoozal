@@ -9,9 +9,17 @@
 #include "player.hpp"
 #include "enemy.hpp"
 #include "font.hpp"
+#include "database.hpp"
 
 const double TICK_RATE = 60;
 const auto TIME_PER_TICK = std::chrono::duration<double>(1.0 / TICK_RATE);
+
+enum GameDifficulty
+{
+    DIFFICULTY_CASUAL = 0,
+    DIFFICULTY_NORMAL = 1,
+    DIFFICULTY_INSANE = 2,
+};
 
 class Game
 {
@@ -19,6 +27,7 @@ private:
     bool Running;
     GameState State;
     SDLRenderer Renderer;
+    Database DB;
 
     std::shared_ptr<MyFont> UIFont;
 
@@ -27,6 +36,8 @@ private:
 
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Enemy>> Enemies;
+
+    GameDifficulty SelectedDifficulty = DIFFICULTY_NORMAL;
 
     GameTimer FireTimer;
     int startingTimeout = 1000;
