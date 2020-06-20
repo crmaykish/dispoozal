@@ -30,6 +30,7 @@ private:
 
     GameTimer FireTimer;
     int startingTimeout = 1000;
+    EnemyDirection LastDirection = ENEMY_DIR_UNKNOWN;
 
     GameTimer CleanupTimer;
 

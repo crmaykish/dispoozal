@@ -9,6 +9,7 @@ const int ENEMY_SIZE = 8;
 
 enum EnemyDirection
 {
+    ENEMY_DIR_UNKNOWN,
     ENEMY_UP,
     ENEMY_DOWN,
     ENEMY_LEFT,
