@@ -193,12 +193,14 @@ void Game::Render()
     Renderer.RenderWholeTexture(OverlayTexture, {0, 0, 800, 800});
 
     // Render score
+    float w = 120;
+    float h = 60;
+    float offset = 20;
+    Rectangle scoreRect = {offset, WORLDSIZE_H - h - offset, w, h};
+    Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect);
 
-    Rectangle scoreRect = {20, (WORLDSIZE_H - 60) - 20, 80, 60};
-    Renderer.RenderFont(UIFont, std::to_string(State.Score), scoreRect);
-
-    Rectangle bestScoreRect = {(WORLDSIZE_W - 80) - 20, (WORLDSIZE_H - 60) - 20, 80, 60};
-    Renderer.RenderFont(UIFont, std::to_string(State.BestScore), bestScoreRect);
+    Rectangle bestScoreRect = {WORLDSIZE_W - w - offset, WORLDSIZE_H - h - offset, w, h};
+    Renderer.RenderFont(UIFont, "BEST: " + std::to_string(State.BestScore), bestScoreRect);
 
     // Render game over screen
     if (State.Status == STATUS_GAMEOVER)
