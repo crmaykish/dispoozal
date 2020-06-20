@@ -34,7 +34,17 @@ void SDLRenderer::Init()
         exit(1);
     }
 
-    TTF_Init();
+    if (TTF_Init() != 0)
+    {
+        Log("Failed to initialize TTF: " + std::string(TTF_GetError()), LOG_ERROR);
+        exit(1);
+    }
+
+    if (IMG_Init(IMG_INIT_PNG) == 0)
+    {
+        Log("Failed to initialize IMG: " + std::string(IMG_GetError()), LOG_ERROR);
+        exit(1);
+    }
 
     // Create the SDL Window
     SDLWin = SDL_CreateWindow(WINDOW_TITLE.c_str(),
@@ -148,7 +158,16 @@ void SDLRenderer::RenderFont(std::shared_ptr<MyFont> font, std::string text, Rec
 
 std::shared_ptr<Texture> SDLRenderer::LoadTexture(std::string fileName)
 {
-    return std::make_shared<Texture>(IMG_LoadTexture(SDLRender, fileName.c_str()));
+    Log("Loading texture: " + fileName, LOG_INFO);
+
+    SDL_Texture *tex = IMG_LoadTexture(SDLRender, fileName.c_str());
+
+    if (tex == NULL)
+    {
+        Log("Failed to load texture: " + fileName, LOG_ERROR);
+    }
+
+    return std::make_shared<Texture>(tex);
 
     // TextureMap.insert({fileName, IMG_LoadTexture(Renderer, fileName.c_str())});
 
@@ -158,6 +177,14 @@ std::shared_ptr<Texture> SDLRenderer::LoadTexture(std::string fileName)
 
 std::shared_ptr<MyFont> SDLRenderer::LoadFont(std::string fileName)
 {
+    Log("Loading font: " + fileName, LOG_INFO);
+
     TTF_Font *font = TTF_OpenFont(fileName.c_str(), 80);
+
+    if (font == NULL)
+    {
+        Log("Failed to load font: " + fileName, LOG_ERROR);
+    }
+
     return std::make_shared<MyFont>(font);
 }
