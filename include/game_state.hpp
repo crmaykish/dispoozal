@@ -8,6 +8,7 @@
 enum GameStatus
 {
     STATUS_UNKNOWN,
+    STATUS_MENU,
     STATUS_RUNNING,
     STATUS_GAMEOVER
 };

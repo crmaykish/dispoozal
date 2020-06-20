@@ -10,6 +10,7 @@
 #include "enemy.hpp"
 #include "font.hpp"
 #include "database.hpp"
+#include "animation.hpp"
 
 const double TICK_RATE = 60;
 const auto TIME_PER_TICK = std::chrono::duration<double>(1.0 / TICK_RATE);
@@ -34,6 +35,19 @@ private:
     std::shared_ptr<Texture> OverlayTexture;
     std::shared_ptr<Texture> EnemyTexture;
 
+    // UI
+
+    Animation ButtonCasualAnimation;
+    Animation ButtonNormalAnimation;
+    Animation ButtonInsaneAnimation;
+    Animation ButtonExitAnimation;
+    Animation ButtonExitLargeAnimation;
+    Animation ButtonRetryAnimation;
+
+    int MainMenuSelectedButtonIndex = 0;
+    int GameoverMenuSelectedButtonIndex = 0;
+    int PauseMenuSelectedButtonIndex = 0;
+
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Enemy>> Enemies;
 
@@ -42,6 +56,9 @@ private:
     GameTimer FireTimer;
     int startingTimeout = 1000;
     EnemyDirection LastDirection = ENEMY_DIR_UNKNOWN;
+
+    bool MenuButtonDownLast = false;
+    bool ModeSwitch = false;
 
     GameTimer CleanupTimer;
 
