@@ -19,6 +19,10 @@ struct GameState
     GameStatus Status = STATUS_UNKNOWN;
     int Score = 0;
     int BestScore = 0;
+
+    int BestScoreCasual = 0;
+    int BestScoreNormal = 0;
+    int BestScoreInsane = 0;
 };
 
 #endif // GAME_STATE_H

@@ -26,6 +26,7 @@ void Game::Init()
     UIFont = Renderer.LoadFont("assets/BitPap.ttf");
     OverlayTexture = Renderer.LoadTexture("assets/overlay.png");
     EnemyTexture = Renderer.LoadTexture("assets/enemy.png");
+    ScoreFrameTexture = Renderer.LoadTexture("assets/score_frame.png");
     auto playerTexture = Renderer.LoadTexture("assets/player.png");
 
     // load animations
@@ -221,7 +222,6 @@ void Game::Update()
             if (GameoverMenuSelectedButtonIndex == 0)
             {
                 // handle retry
-                Reset();
                 State.Status = STATUS_RUNNING;
             }
             else if (GameoverMenuSelectedButtonIndex == 1)
@@ -230,6 +230,8 @@ void Game::Update()
                 State.Status = STATUS_MENU;
                 ModeSwitch = true;
             }
+
+            Reset();
         }
     }
     else if (State.Status == STATUS_RUNNING)
@@ -342,6 +344,19 @@ void Game::Render()
         ButtonNormalAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 42 * TEXTURE_SCALE);
         ButtonInsaneAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 27 * TEXTURE_SCALE);
         ButtonExitAnimation.Render(Renderer, 35 * TEXTURE_SCALE, 10 * TEXTURE_SCALE);
+
+        // render high scores
+        Rectangle casualRect = {68 * TEXTURE_SCALE, 57 * TEXTURE_SCALE, 15 * TEXTURE_SCALE, 12 * TEXTURE_SCALE};
+        Renderer.RenderWholeTexture(ScoreFrameTexture, casualRect);
+        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreCasual), casualRect, FG_COLOR);
+
+        Rectangle normalRect = {68 * TEXTURE_SCALE, 42 * TEXTURE_SCALE, 15 * TEXTURE_SCALE, 12 * TEXTURE_SCALE};
+        Renderer.RenderWholeTexture(ScoreFrameTexture, normalRect);
+        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreNormal), normalRect, FG_COLOR);
+
+        Rectangle insaneRect = {68 * TEXTURE_SCALE, 27 * TEXTURE_SCALE, 15 * TEXTURE_SCALE, 12 * TEXTURE_SCALE};
+        Renderer.RenderWholeTexture(ScoreFrameTexture, insaneRect);
+        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreInsane), insaneRect, FG_COLOR);
     }
     else if (State.Status == STATUS_GAMEOVER)
     {
@@ -352,10 +367,10 @@ void Game::Render()
         float h = 60;
         float offset = 20;
         Rectangle scoreRect = {offset, WORLDSIZE_H - h - offset, w, h};
-        Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect);
+        Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect, BG_COLOR);
 
         Rectangle bestScoreRect = {WORLDSIZE_W - w - offset, WORLDSIZE_H - h - offset, w, h};
-        Renderer.RenderFont(UIFont, "BEST: " + std::to_string(State.BestScore), bestScoreRect);
+        Renderer.RenderFont(UIFont, "BEST: " + std::to_string(State.BestScore), bestScoreRect, BG_COLOR);
 
         // render buttons
 
@@ -378,10 +393,10 @@ void Game::Render()
         float h = 60;
         float offset = 20;
         Rectangle scoreRect = {offset, WORLDSIZE_H - h - offset, w, h};
-        Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect);
+        Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect, BG_COLOR);
 
         Rectangle bestScoreRect = {WORLDSIZE_W - w - offset, WORLDSIZE_H - h - offset, w, h};
-        Renderer.RenderFont(UIFont, "BEST: " + std::to_string(State.BestScore), bestScoreRect);
+        Renderer.RenderFont(UIFont, "BEST: " + std::to_string(State.BestScore), bestScoreRect, BG_COLOR);
     }
 
     Renderer.Present();
@@ -404,6 +419,10 @@ void Game::Reset()
 {
     State.Score = 0;
     State.BestScore = DB.GetHighScore(SelectedDifficulty);
+
+    State.BestScoreCasual = DB.GetHighScore(DIFFICULTY_CASUAL);
+    State.BestScoreNormal = DB.GetHighScore(DIFFICULTY_NORMAL);
+    State.BestScoreInsane = DB.GetHighScore(DIFFICULTY_INSANE);
 
     FireTimer.SetTimeout(1000);
     FireTimer.Reset();

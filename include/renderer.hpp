@@ -32,7 +32,7 @@ public:
     void RenderTextureRotate(std::shared_ptr<Texture> texture, Rectangle source, Rectangle dest, float angle, Point center);
 
     // Font rendering
-    void RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest);
+    void RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest, SDL_Color color);
 
     // Resource loading
     std::shared_ptr<Texture> LoadTexture(std::string fileName);

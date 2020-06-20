@@ -34,6 +34,7 @@ private:
 
     std::shared_ptr<Texture> OverlayTexture;
     std::shared_ptr<Texture> EnemyTexture;
+    std::shared_ptr<Texture> ScoreFrameTexture;
 
     // UI
 
