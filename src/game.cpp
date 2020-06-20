@@ -5,6 +5,11 @@
 #include "player.hpp"
 #include "rand_utils.hpp"
 
+std::shared_ptr<Animation> CreateBarrelAnimation(std::shared_ptr<Texture> spriteSheet)
+{
+    return std::make_shared<Animation>(spriteSheet, 8, 28, 28, 80, false);
+}
+
 Game::Game() : CleanupTimer(5000), FireTimer(1000)
 {
     CleanupTimer.Reset();
@@ -23,23 +28,25 @@ void Game::Init()
     Renderer.Init();
 
     // Load resources
-    UIFont = Renderer.LoadFont("assets/BitPap.ttf");
+    UIFont = Renderer.LoadFont("assets/EXEPixelPerfect.ttf");
     OverlayTexture = Renderer.LoadTexture("assets/overlay.png");
-    EnemyTexture = Renderer.LoadTexture("assets/enemy.png");
+    EnemyTexture = Renderer.LoadTexture("assets/barrel.png");
     ScoreFrameTexture = Renderer.LoadTexture("assets/score_frame.png");
-    auto playerTexture = Renderer.LoadTexture("assets/player.png");
 
     // load animations
-    ButtonCasualAnimation = Animation(Renderer.LoadTexture("assets/button_casual.png"), 2, 47, 12, 0, false);
-    ButtonNormalAnimation = Animation(Renderer.LoadTexture("assets/button_normal.png"), 2, 47, 12, 0, false);
-    ButtonInsaneAnimation = Animation(Renderer.LoadTexture("assets/button_insane.png"), 2, 47, 12, 0, false);
-    ButtonExitAnimation = Animation(Renderer.LoadTexture("assets/button_exit.png"), 2, 33, 12, 0, false);
-    ButtonExitLargeAnimation = Animation(Renderer.LoadTexture("assets/button_exit_large.png"), 2, 47, 12, 0, false);
-    ButtonRetryAnimation = Animation(Renderer.LoadTexture("assets/button_retry.png"), 2, 47, 12, 0, false);
+    ButtonCasualAnimation = Animation(Renderer.LoadTexture("assets/button_casual.png"), 2, 47 * 4, 12 * 4, 0, false);
+    ButtonNormalAnimation = Animation(Renderer.LoadTexture("assets/button_normal.png"), 2, 47 * 4, 12 * 4, 0, false);
+    ButtonInsaneAnimation = Animation(Renderer.LoadTexture("assets/button_insane.png"), 2, 47 * 4, 12 * 4, 0, false);
+    ButtonExitAnimation = Animation(Renderer.LoadTexture("assets/button_exit.png"), 2, 33 * 4, 12 * 4, 0, false);
+    ButtonExitLargeAnimation = Animation(Renderer.LoadTexture("assets/button_exit_large.png"), 2, 47 * 4, 12 * 4, 0, false);
+    ButtonRetryAnimation = Animation(Renderer.LoadTexture("assets/button_retry.png"), 2, 47 * 4, 12 * 4, 0, false);
 
     // Add player
     PlayerOne = std::make_shared<Player>();
-    PlayerOne->SetMainTexture(playerTexture);
+    PlayerOne->SetRightAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_right.png"), 3, 30, 23, 150, true));
+    PlayerOne->SetLeftAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_left.png"), 3, 30, 23, 150, true));
+    PlayerOne->SetUpAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_up.png"), 3, 30, 23, 150, true));
+    PlayerOne->SetDownAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_down.png"), 3, 30, 23, 150, true));
 
     Reset();
 }
@@ -276,8 +283,7 @@ void Game::Update()
 
             LastDirection = dir;
 
-            e = std::make_shared<Enemy>(p);
-            e->SetMainTexture(EnemyTexture);
+            e = std::make_shared<Enemy>(p, CreateBarrelAnimation(EnemyTexture));
             e->Direction = dir;
 
             Enemies.push_back(e);
@@ -340,21 +346,21 @@ void Game::Render()
         // render title
 
         // render buttons
-        ButtonCasualAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 57 * TEXTURE_SCALE);
-        ButtonNormalAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 42 * TEXTURE_SCALE);
-        ButtonInsaneAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 27 * TEXTURE_SCALE);
-        ButtonExitAnimation.Render(Renderer, 35 * TEXTURE_SCALE, 10 * TEXTURE_SCALE);
+        ButtonCasualAnimation.Render(Renderer, 18 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4);
+        ButtonNormalAnimation.Render(Renderer, 18 * TEXTURE_SCALE * 4, 42 * TEXTURE_SCALE * 4);
+        ButtonInsaneAnimation.Render(Renderer, 18 * TEXTURE_SCALE * 4, 27 * TEXTURE_SCALE * 4);
+        ButtonExitAnimation.Render(Renderer, 35 * TEXTURE_SCALE * 4, 10 * TEXTURE_SCALE * 4);
 
         // render high scores
-        Rectangle casualRect = {68 * TEXTURE_SCALE, 57 * TEXTURE_SCALE, 15 * TEXTURE_SCALE, 12 * TEXTURE_SCALE};
+        Rectangle casualRect = {68 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4, 15 * TEXTURE_SCALE * 4, 12 * TEXTURE_SCALE * 4};
         Renderer.RenderWholeTexture(ScoreFrameTexture, casualRect);
         Renderer.RenderFont(UIFont, std::to_string(State.BestScoreCasual), casualRect, FG_COLOR);
 
-        Rectangle normalRect = {68 * TEXTURE_SCALE, 42 * TEXTURE_SCALE, 15 * TEXTURE_SCALE, 12 * TEXTURE_SCALE};
+        Rectangle normalRect = {68 * TEXTURE_SCALE * 4, 42 * TEXTURE_SCALE * 4, 15 * TEXTURE_SCALE * 4, 12 * TEXTURE_SCALE * 4};
         Renderer.RenderWholeTexture(ScoreFrameTexture, normalRect);
         Renderer.RenderFont(UIFont, std::to_string(State.BestScoreNormal), normalRect, FG_COLOR);
 
-        Rectangle insaneRect = {68 * TEXTURE_SCALE, 27 * TEXTURE_SCALE, 15 * TEXTURE_SCALE, 12 * TEXTURE_SCALE};
+        Rectangle insaneRect = {68 * TEXTURE_SCALE * 4, 27 * TEXTURE_SCALE * 4, 15 * TEXTURE_SCALE * 4, 12 * TEXTURE_SCALE * 4};
         Renderer.RenderWholeTexture(ScoreFrameTexture, insaneRect);
         Renderer.RenderFont(UIFont, std::to_string(State.BestScoreInsane), insaneRect, FG_COLOR);
     }
@@ -363,9 +369,9 @@ void Game::Render()
         Renderer.RenderWholeTexture(OverlayTexture, {0, 0, 800, 800});
 
         // Render score
-        float w = 120;
-        float h = 60;
-        float offset = 20;
+        float w = 160;
+        float h = 40;
+        float offset = 10;
         Rectangle scoreRect = {offset, WORLDSIZE_H - h - offset, w, h};
         Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect, BG_COLOR);
 
@@ -373,9 +379,8 @@ void Game::Render()
         Renderer.RenderFont(UIFont, "BEST: " + std::to_string(State.BestScore), bestScoreRect, BG_COLOR);
 
         // render buttons
-
-        ButtonRetryAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 50 * TEXTURE_SCALE);
-        ButtonExitLargeAnimation.Render(Renderer, 18 * TEXTURE_SCALE, 25 * TEXTURE_SCALE);
+        ButtonRetryAnimation.Render(Renderer, 400 - 188, 400 + 40);
+        ButtonExitLargeAnimation.Render(Renderer, 400 - 188, 400 - 44 - 40);
     }
     else if (State.Status == STATUS_RUNNING)
     {
@@ -389,9 +394,9 @@ void Game::Render()
         Renderer.RenderWholeTexture(OverlayTexture, {0, 0, 800, 800});
 
         // Render score
-        float w = 120;
-        float h = 60;
-        float offset = 20;
+        float w = 160;
+        float h = 40;
+        float offset = 10;
         Rectangle scoreRect = {offset, WORLDSIZE_H - h - offset, w, h};
         Renderer.RenderFont(UIFont, "SCORE: " + std::to_string(State.Score), scoreRect, BG_COLOR);
 

@@ -3,9 +3,9 @@
 
 #include "game_object.hpp"
 #include "game_timer.hpp"
-#include "texture.hpp"
+#include "animation.hpp"
 
-const int ENEMY_SIZE = 8;
+const int ENEMY_SIZE = 28;
 
 enum EnemyDirection
 {
@@ -19,18 +19,16 @@ enum EnemyDirection
 class Enemy : public GameObject
 {
 protected:
-    std::shared_ptr<Texture> MainTexture;
     float MoveSpeed = 8.0;
+    std::shared_ptr<Animation> MainAnimation;
 
 public:
     EnemyDirection Direction;
 
-    Enemy(Point position);
+    Enemy(Point position, std::shared_ptr<Animation> animation);
 
     void Update(GameState &state) override;
     void Render(SDLRenderer &renderer) override;
-
-    void SetMainTexture(std::shared_ptr<Texture> mainTexture);
 };
 
 #endif // ENEMY_H

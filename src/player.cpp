@@ -2,11 +2,10 @@
 #include "vector.hpp"
 #include "logger.hpp"
 
-Player::Player() :GameObject()
+Player::Player() : GameObject()
 {
-    Bound = {8 * TEXTURE_SCALE, 8 * TEXTURE_SCALE};
+    Bound = {30 * TEXTURE_SCALE, 23 * TEXTURE_SCALE};
     Position = {WORLDSIZE_W / 2, WORLDSIZE_H / 2};
-
 }
 
 void Player::Update(GameState &state)
@@ -21,16 +20,51 @@ void Player::Update(GameState &state)
     }
 
     // Rotation = Vector2D(input.Cursor - Position).GetAngle();
+
+    RightAnimation->Update();
+    LeftAnimation->Update();
+    UpAnimation->Update();
+    DownAnimation->Update();
 }
 
 void Player::Render(SDLRenderer &renderer)
 {
-    renderer.RenderWholeTextureRotate(MainTexture, GetHitBox(), Rotation * TO_DEGS, {Bound.w / 2, Bound.h / 2});
+    if (CloseEnough(Rotation, 0.0))
+    {
+        RightAnimation->Render(renderer, Position.x - Bound.w / 2, Position.y - Bound.h / 2);
+    }
+    else if (CloseEnough(Rotation, Pi / 2))
+    {
+        UpAnimation->Render(renderer, Position.x - Bound.w / 2, Position.y - Bound.h / 2);
+    }
+    else if (CloseEnough(Rotation, Pi))
+    {
+        LeftAnimation->Render(renderer, Position.x - Bound.w / 2, Position.y - Bound.h / 2);
+    }
+    else if (CloseEnough(Rotation, -Pi / 2))
+    {
+        DownAnimation->Render(renderer, Position.x - Bound.w / 2, Position.y - Bound.h / 2);
+    }
 }
 
-void Player::SetMainTexture(std::shared_ptr<Texture> mainTexture)
+void Player::SetRightAnimation(std::shared_ptr<Animation> animation)
 {
-    MainTexture = mainTexture;
+    RightAnimation = animation;
+}
+
+void Player::SetLeftAnimation(std::shared_ptr<Animation> animation)
+{
+    LeftAnimation = animation;
+}
+
+void Player::SetUpAnimation(std::shared_ptr<Animation> animation)
+{
+    UpAnimation = animation;
+}
+
+void Player::SetDownAnimation(std::shared_ptr<Animation> animation)
+{
+    DownAnimation = animation;
 }
 
 float Player::GetRotation()
