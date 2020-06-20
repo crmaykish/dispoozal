@@ -11,6 +11,7 @@
 #include "font.hpp"
 #include "database.hpp"
 #include "animation.hpp"
+#include "sound.hpp"
 
 const double TICK_RATE = 60;
 const auto TIME_PER_TICK = std::chrono::duration<double>(1.0 / TICK_RATE);
@@ -48,6 +49,12 @@ private:
     int MainMenuSelectedButtonIndex = 0;
     int GameoverMenuSelectedButtonIndex = 0;
     int PauseMenuSelectedButtonIndex = 0;
+
+    // sounds
+    std::shared_ptr<Sound> SuccessSound;
+    std::shared_ptr<Sound> FailSound;
+    std::shared_ptr<Sound> ClickSound;
+    std::shared_ptr<Sound> SelectSound;
 
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Enemy>> Enemies;

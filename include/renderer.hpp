@@ -4,9 +4,11 @@
 #include <memory>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include "game_geometry.hpp"
 #include "texture.hpp"
 #include "font.hpp"
+#include "sound.hpp"
 #include "settings.hpp"
 
 const SDL_Color BG_COLOR = {0x0F, 0x38, 0x0F, 0xFF};
@@ -34,9 +36,12 @@ public:
     // Font rendering
     void RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest, SDL_Color color);
 
+    void PlaySound(std::shared_ptr<Sound> sound);
+
     // Resource loading
     std::shared_ptr<Texture> LoadTexture(std::string fileName);
     std::shared_ptr<MyFont> LoadFont(std::string fileName);
+    std::shared_ptr<Sound> LoadSound(std::string fileName);
 };
 
 #endif // RENDERER_H

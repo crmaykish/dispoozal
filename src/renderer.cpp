@@ -46,6 +46,8 @@ void SDLRenderer::Init()
         exit(1);
     }
 
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
     // Create the SDL Window
     SDLWin = SDL_CreateWindow(WINDOW_TITLE.c_str(),
                               SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -156,6 +158,11 @@ void SDLRenderer::RenderFont(std::shared_ptr<MyFont> font, std::string text, Rec
     TTF_RenderText_Solid(font->GetSDLFont(), text.c_str(), color);
 }
 
+void SDLRenderer::PlaySound(std::shared_ptr<Sound> sound)
+{
+    Mix_PlayChannel(-1, sound->GetSDLChunk(), 0);
+}
+
 std::shared_ptr<Texture> SDLRenderer::LoadTexture(std::string fileName)
 {
     Log("Loading texture: " + fileName, LOG_INFO);
@@ -187,4 +194,11 @@ std::shared_ptr<MyFont> SDLRenderer::LoadFont(std::string fileName)
     }
 
     return std::make_shared<MyFont>(font);
+}
+
+std::shared_ptr<Sound> SDLRenderer::LoadSound(std::string fileName)
+{
+    Mix_Chunk *m = Mix_LoadWAV(fileName.c_str());
+
+    return std::make_shared<Sound>(m);
 }

@@ -41,6 +41,12 @@ void Game::Init()
     ButtonExitLargeAnimation = Animation(Renderer.LoadTexture("assets/button_exit_large.png"), 2, 47 * 4, 12 * 4, 0, false);
     ButtonRetryAnimation = Animation(Renderer.LoadTexture("assets/button_retry.png"), 2, 47 * 4, 12 * 4, 0, false);
 
+    // load sounds
+    SuccessSound = Renderer.LoadSound("assets/success.wav");
+    FailSound = Renderer.LoadSound("assets/fail.wav");
+    ClickSound = Renderer.LoadSound("assets/move.wav");
+    SelectSound = Renderer.LoadSound("assets/select.wav");
+
     // Add player
     PlayerOne = std::make_shared<Player>();
     PlayerOne->SetRightAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_right.png"), 3, 30, 23, 150, true));
@@ -113,6 +119,8 @@ void Game::Update()
         {
             if (!MenuButtonDownLast)
             {
+                Renderer.PlaySound(ClickSound);
+
                 MainMenuSelectedButtonIndex = MainMenuSelectedButtonIndex == 3 ? 0 : MainMenuSelectedButtonIndex + 1;
                 MenuButtonDownLast = true;
             }
@@ -121,6 +129,8 @@ void Game::Update()
         {
             if (!MenuButtonDownLast)
             {
+                Renderer.PlaySound(ClickSound);
+
                 MainMenuSelectedButtonIndex = MainMenuSelectedButtonIndex == 0 ? 3 : MainMenuSelectedButtonIndex - 1;
                 MenuButtonDownLast = true;
             }
@@ -156,6 +166,8 @@ void Game::Update()
 
         if (State.Input.Select)
         {
+            Renderer.PlaySound(SelectSound);
+
             // button selected, handle it
             if (MainMenuSelectedButtonIndex == 0)
             {
@@ -192,6 +204,8 @@ void Game::Update()
         {
             if (!MenuButtonDownLast)
             {
+                Renderer.PlaySound(ClickSound);
+
                 GameoverMenuSelectedButtonIndex = GameoverMenuSelectedButtonIndex == 1 ? 0 : GameoverMenuSelectedButtonIndex + 1;
                 MenuButtonDownLast = true;
             }
@@ -200,6 +214,8 @@ void Game::Update()
         {
             if (!MenuButtonDownLast)
             {
+                Renderer.PlaySound(ClickSound);
+
                 GameoverMenuSelectedButtonIndex = GameoverMenuSelectedButtonIndex == 0 ? 1 : GameoverMenuSelectedButtonIndex - 1;
                 MenuButtonDownLast = true;
             }
@@ -226,6 +242,8 @@ void Game::Update()
         if (State.Input.Select)
         {
             // button selected, handle it
+            Renderer.PlaySound(SelectSound);
+
             if (GameoverMenuSelectedButtonIndex == 0)
             {
                 // handle retry
@@ -316,10 +334,14 @@ void Game::Update()
                     (d == ENEMY_RIGHT && CloseEnough(rot, Pi)) ||
                     (d == ENEMY_DOWN && CloseEnough(rot, Pi / 2)))
                 {
+                    Renderer.PlaySound(SuccessSound);
+
                     State.Score++;
                 }
                 else
                 {
+                    Renderer.PlaySound(FailSound);
+
                     State.Status = STATUS_GAMEOVER;
 
                     if (State.Score > State.BestScore)
