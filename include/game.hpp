@@ -29,7 +29,6 @@ private:
     std::vector<std::shared_ptr<Enemy>> Enemies;
 
     GameTimer FireTimer;
-
     int startingTimeout = 1000;
 
     GameTimer CleanupTimer;
@@ -39,10 +38,6 @@ private:
     void Cleanup();
 
     void Reset();
-
-    // void HandlePlayerCollisions(std::shared_ptr<Projectile> projectile);
-    // void HandleEnemyCollisions(std::shared_ptr<Projectile> projectile);
-    // void HandleSpawnerCollisions(std::shared_ptr<Projectile> projectile);
 
 public:
     Game();

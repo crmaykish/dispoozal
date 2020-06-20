@@ -24,14 +24,17 @@ public:
     void Present();
     void Destroy();
 
+    // Texture rendering
     void RenderRectangle(Rectangle rect, int r, int g, int b, int a);
     void RenderWholeTexture(std::shared_ptr<Texture> texture, Rectangle dest);
     void RenderWholeTextureRotate(std::shared_ptr<Texture> texture, Rectangle dest, float angle, Point center);
     void RenderTexture(std::shared_ptr<Texture> texture, Rectangle source, Rectangle dest);
     void RenderTextureRotate(std::shared_ptr<Texture> texture, Rectangle source, Rectangle dest, float angle, Point center);
 
+    // Font rendering
     void RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest);
 
+    // Resource loading
     std::shared_ptr<Texture> LoadTexture(std::string fileName);
     std::shared_ptr<MyFont> LoadFont(std::string fileName);
 };

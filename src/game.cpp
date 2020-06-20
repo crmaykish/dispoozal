@@ -15,16 +15,20 @@ void Game::Init()
 {
     Log("Initializing game", LOG_INFO);
 
+    // Seed the random number generator
+    srand(time(NULL));
+
     Renderer.Init();
 
+    // Load resources
     UIFont = Renderer.LoadFont("assets/BitPap.ttf");
-
     OverlayTexture = Renderer.LoadTexture("assets/overlay.png");
     EnemyTexture = Renderer.LoadTexture("assets/enemy.png");
+    auto playerTexture = Renderer.LoadTexture("assets/player.png");
 
     // Add player
     PlayerOne = std::make_shared<Player>();
-    PlayerOne->SetMainTexture(Renderer.LoadTexture("assets/player.png"));
+    PlayerOne->SetMainTexture(playerTexture);
 
     Reset();
 }
@@ -46,7 +50,7 @@ void Game::Loop()
         previousTime = currentTime;
         lag += elapsedTime;
 
-        State.GetInput().PollForInput();
+        State.Input.PollForInput();
 
         while (lag >= TIME_PER_TICK)
         {
@@ -58,7 +62,7 @@ void Game::Loop()
                 CleanupTimer.Reset();
             }
 
-            if (State.GetInput().Quit)
+            if (State.Input.Quit)
             {
                 Running = false;
             }
@@ -75,16 +79,11 @@ void Game::Close()
     Log("Closing game", LOG_INFO);
 }
 
-bool CloseEnough(float a, float b)
-{
-    return (a > (b - 0.00001) && a < (b + 0.00001));
-}
-
 void Game::Update()
 {
     if (State.Status != STATUS_RUNNING)
     {
-        if (State.GetInput().FireMain)
+        if (State.Input.Select)
         {
             Reset();
             State.Status = STATUS_RUNNING;
@@ -182,11 +181,12 @@ void Game::Render()
     Renderer.RenderWholeTexture(OverlayTexture, {0, 0, 800, 800});
 
     // Render score
-    Rectangle scoreRectangle = {(WORLDSIZE_W - 80) - 20, (WORLDSIZE_H - 60) - 20, 80, 60};
-    Renderer.RenderFont(UIFont, std::to_string(State.Score), scoreRectangle);
 
-    // Rectangle levelRect = {20, (WORLDSIZE_H - 60) - 20, 80, 60};
-    // Renderer.RenderFont(UIFont, std::to_string(State.Level), levelRect);
+    Rectangle scoreRect = {20, (WORLDSIZE_H - 60) - 20, 80, 60};
+    Renderer.RenderFont(UIFont, std::to_string(State.Score), scoreRect);
+
+    Rectangle bestScoreRect = {(WORLDSIZE_W - 80) - 20, (WORLDSIZE_H - 60) - 20, 80, 60};
+    Renderer.RenderFont(UIFont, std::to_string(State.BestScore), bestScoreRect);
 
     // Render game over screen
     if (State.Status == STATUS_GAMEOVER)
@@ -216,8 +216,16 @@ void Game::Cleanup()
 
 void Game::Reset()
 {
-    State.Level = 1;
+    if (State.Score > State.BestScore)
+    {
+        // Update best score
+        State.BestScore = State.Score;
+    }
+
     State.Score = 0;
+
+    FireTimer.SetTimeout(1000);
+    FireTimer.Reset();
 
     Enemies.clear();
 }

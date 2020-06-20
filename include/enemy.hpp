@@ -5,6 +5,8 @@
 #include "game_timer.hpp"
 #include "texture.hpp"
 
+const int ENEMY_SIZE = 8;
+
 enum EnemyDirection
 {
     ENEMY_UP,
@@ -18,8 +20,6 @@ class Enemy : public GameObject
 protected:
     std::shared_ptr<Texture> MainTexture;
     float MoveSpeed = 8.0;
-
-    GameTimer FireTimer;
 
 public:
     EnemyDirection Direction;

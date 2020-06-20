@@ -14,9 +14,6 @@ protected:
     Size Bound;
     Vector2D Velocity;
 
-    int MaxHP = 0;
-    int HP = 0;
-
     GameObject();
 
 public:
@@ -31,9 +28,6 @@ public:
 
     Vector2D GetVelocity();
     void SetVelocity(Vector2D velocity);
-
-    void Damage(int damage);
-    bool IsAlive();
 };
 
 #endif // GAME_OBJECT_H

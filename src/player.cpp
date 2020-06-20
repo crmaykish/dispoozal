@@ -2,20 +2,16 @@
 #include "vector.hpp"
 #include "logger.hpp"
 
-Player::Player() : FlipTimer(250), GameObject()
+Player::Player() :GameObject()
 {
     Bound = {8 * TEXTURE_SCALE, 8 * TEXTURE_SCALE};
     Position = {WORLDSIZE_W / 2, WORLDSIZE_H / 2};
 
-    FlipTimer.Reset();
-
-    MaxHP = 100;
-    HP = MaxHP;
 }
 
 void Player::Update(GameState &state)
 {
-    auto input = state.GetInput();
+    auto input = state.Input;
 
     Vector2D keyVector = WASDToMovementVector(input.Up, input.Down, input.Left, input.Right);
 
@@ -40,9 +36,4 @@ void Player::SetMainTexture(std::shared_ptr<Texture> mainTexture)
 float Player::GetRotation()
 {
     return Rotation;
-}
-
-bool Player::GetFlip()
-{
-    return Flip;
 }

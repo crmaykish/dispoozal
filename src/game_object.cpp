@@ -48,18 +48,3 @@ void GameObject::SetVelocity(Vector2D velocity)
 {
     Velocity = velocity;
 }
-
-void GameObject::Damage(int damage)
-{
-    HP -= damage;
-
-    if (HP < 0)
-    {
-        HP = 0;
-    }
-}
-
-bool GameObject::IsAlive()
-{
-    return HP > 0;
-}

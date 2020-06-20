@@ -26,8 +26,4 @@ public:
     Vector2D Rotate(float angle);
 };
 
-// TODO: move this
-/** @brief Convert a combination of directions into a unit vector for movement at that angle */
-Vector2D WASDToMovementVector(bool U, bool D, bool L, bool R);
-
 #endif // VECTOR_HPP

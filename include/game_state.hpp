@@ -12,18 +12,12 @@ enum GameStatus
     STATUS_GAMEOVER
 };
 
-class GameState
+struct GameState
 {
-private:
     UserInputState Input;
-public:
     GameStatus Status = STATUS_UNKNOWN;
-
     int Score = 0;
-    int Level = 1;
-
-    GameState();
-    UserInputState &GetInput();
+    int BestScore = 0;
 };
 
 #endif // GAME_STATE_H
