@@ -398,16 +398,28 @@ void Game::Render()
 
         // render high scores
         Rectangle casualRect = {68 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4, 15 * TEXTURE_SCALE * 4, 12 * TEXTURE_SCALE * 4};
+        Rectangle casualNumRect = casualRect;
+        casualNumRect.pos.x += 24;
+        casualNumRect.size.w -= 40;
+        casualNumRect.size.h += 16;
         Renderer.RenderWholeTexture(ScoreFrameTexture, casualRect);
-        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreCasual), casualRect, FG_COLOR);
+        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreCasual), casualNumRect, FG_COLOR);
 
         Rectangle normalRect = {68 * TEXTURE_SCALE * 4, 42 * TEXTURE_SCALE * 4, 15 * TEXTURE_SCALE * 4, 12 * TEXTURE_SCALE * 4};
+        Rectangle normalNumRect = normalRect;
+        normalNumRect.pos.x += 24;
+        normalNumRect.size.w -= 40;
+        normalNumRect.size.h += 16;
         Renderer.RenderWholeTexture(ScoreFrameTexture, normalRect);
-        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreNormal), normalRect, FG_COLOR);
+        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreNormal), normalNumRect, FG_COLOR);
 
         Rectangle insaneRect = {68 * TEXTURE_SCALE * 4, 27 * TEXTURE_SCALE * 4, 15 * TEXTURE_SCALE * 4, 12 * TEXTURE_SCALE * 4};
+        Rectangle insaneNumRect = insaneRect;
+        insaneNumRect.pos.x += 24;
+        insaneNumRect.size.w -= 40;
+        insaneNumRect.size.h += 16;
         Renderer.RenderWholeTexture(ScoreFrameTexture, insaneRect);
-        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreInsane), insaneRect, FG_COLOR);
+        Renderer.RenderFont(UIFont, std::to_string(State.BestScoreInsane), insaneNumRect, FG_COLOR);
     }
     else if (State.Status == STATUS_GAMEOVER)
     {
