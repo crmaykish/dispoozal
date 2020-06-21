@@ -32,6 +32,7 @@ void Game::Init()
     OverlayTexture = Renderer.LoadTexture("assets/overlay.png");
     EnemyTexture = Renderer.LoadTexture("assets/barrel.png");
     ScoreFrameTexture = Renderer.LoadTexture("assets/score_frame.png");
+    MainLogo = Renderer.LoadTexture("assets/logo.png");
 
     // load animations
     ButtonCasualAnimation = Animation(Renderer.LoadTexture("assets/button_casual.png"), 2, 47 * 4, 12 * 4, 0, false);
@@ -40,6 +41,8 @@ void Game::Init()
     ButtonExitAnimation = Animation(Renderer.LoadTexture("assets/button_exit.png"), 2, 33 * 4, 12 * 4, 0, false);
     ButtonExitLargeAnimation = Animation(Renderer.LoadTexture("assets/button_exit_large.png"), 2, 47 * 4, 12 * 4, 0, false);
     ButtonRetryAnimation = Animation(Renderer.LoadTexture("assets/button_retry.png"), 2, 47 * 4, 12 * 4, 0, false);
+
+    MainMenuAnimation = Animation(Renderer.LoadTexture("assets/player_down.png"), 3, 30, 23, 150, true);
 
     // load sounds
     SuccessSound = Renderer.LoadSound("assets/success.wav");
@@ -114,6 +117,8 @@ void Game::Update()
 {
     if (State.Status == STATUS_MENU)
     {
+        MainMenuAnimation.Update();
+
         if (ModeSwitch && State.Input.Select)
         {
             return;
@@ -380,6 +385,10 @@ void Game::Render()
     if (State.Status == STATUS_MENU)
     {
         // render title
+        Rectangle logoRect = {18 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4 + 120, 180*3 - 20, 100 * 2};
+        Renderer.RenderWholeTexture(MainLogo, logoRect);
+
+        MainMenuAnimation.Render(Renderer, 590, 585);
 
         // render buttons
         ButtonCasualAnimation.Render(Renderer, 18 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4);

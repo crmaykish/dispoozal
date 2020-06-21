@@ -1,7 +1,7 @@
 #include "renderer.hpp"
 #include "logger.hpp"
 
-const std::string WINDOW_TITLE = "Dissipation";
+const std::string WINDOW_TITLE = "Dispoozal";
 
 static SDL_Rect ConvertRect(Rectangle r, bool flipAndScale = false)
 {

@@ -36,6 +36,7 @@ private:
     std::shared_ptr<Texture> OverlayTexture;
     std::shared_ptr<Texture> EnemyTexture;
     std::shared_ptr<Texture> ScoreFrameTexture;
+    std::shared_ptr<Texture> MainLogo;
 
     // UI
 
@@ -45,6 +46,8 @@ private:
     Animation ButtonExitAnimation;
     Animation ButtonExitLargeAnimation;
     Animation ButtonRetryAnimation;
+
+    Animation MainMenuAnimation;
 
     int MainMenuSelectedButtonIndex = 0;
     int GameoverMenuSelectedButtonIndex = 0;
