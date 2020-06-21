@@ -47,6 +47,11 @@ void Game::Init()
     ClickSound = Renderer.LoadSound("assets/move.wav");
     SelectSound = Renderer.LoadSound("assets/select.wav");
 
+    // load music
+    SlowMusic = Renderer.LoadMusic("assets/theme_120.mp3");
+    MediumMusic = Renderer.LoadMusic("assets/theme_130.mp3");
+    FastMusic = Renderer.LoadMusic("assets/theme_140.mp3");
+
     // Add player
     PlayerOne = std::make_shared<Player>();
     PlayerOne->SetRightAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_right.png"), 3, 30, 23, 150, true));
@@ -55,6 +60,8 @@ void Game::Init()
     PlayerOne->SetDownAnimation(std::make_shared<Animation>(Renderer.LoadTexture("assets/player_down.png"), 3, 30, 23, 150, true));
 
     Reset();
+
+    Renderer.PlayMusic(SlowMusic);
 }
 
 void Game::Loop()
@@ -175,6 +182,8 @@ void Game::Update()
                 SelectedDifficulty = DIFFICULTY_CASUAL;
                 Reset();
                 State.Status = STATUS_RUNNING;
+
+                Renderer.PlayMusic(SlowMusic);
             }
             else if (MainMenuSelectedButtonIndex == 1)
             {
@@ -182,6 +191,8 @@ void Game::Update()
                 SelectedDifficulty = DIFFICULTY_NORMAL;
                 Reset();
                 State.Status = STATUS_RUNNING;
+
+                Renderer.PlayMusic(MediumMusic);
             }
             else if (MainMenuSelectedButtonIndex == 2)
             {
@@ -189,6 +200,8 @@ void Game::Update()
                 SelectedDifficulty = DIFFICULTY_INSANE;
                 Reset();
                 State.Status = STATUS_RUNNING;
+
+                Renderer.PlayMusic(FastMusic);
             }
             else if (MainMenuSelectedButtonIndex == 3)
             {
@@ -340,6 +353,7 @@ void Game::Update()
                 }
                 else
                 {
+                    Renderer.PlayMusic(SlowMusic);
                     Renderer.PlaySound(FailSound);
 
                     State.Status = STATUS_GAMEOVER;

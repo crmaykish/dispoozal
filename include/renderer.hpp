@@ -37,11 +37,13 @@ public:
     void RenderFont(std::shared_ptr<MyFont> font, std::string text, Rectangle dest, SDL_Color color);
 
     void PlaySound(std::shared_ptr<Sound> sound);
+    void PlayMusic(std::shared_ptr<MyMusic> music);
 
     // Resource loading
     std::shared_ptr<Texture> LoadTexture(std::string fileName);
     std::shared_ptr<MyFont> LoadFont(std::string fileName);
     std::shared_ptr<Sound> LoadSound(std::string fileName);
+    std::shared_ptr<MyMusic> LoadMusic(std::string fileName);
 };
 
 #endif // RENDERER_H

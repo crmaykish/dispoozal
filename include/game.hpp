@@ -56,6 +56,10 @@ private:
     std::shared_ptr<Sound> ClickSound;
     std::shared_ptr<Sound> SelectSound;
 
+    std::shared_ptr<MyMusic> SlowMusic;
+    std::shared_ptr<MyMusic> MediumMusic;
+    std::shared_ptr<MyMusic> FastMusic;
+
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Enemy>> Enemies;
 

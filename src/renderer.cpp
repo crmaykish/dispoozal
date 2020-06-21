@@ -163,6 +163,11 @@ void SDLRenderer::PlaySound(std::shared_ptr<Sound> sound)
     Mix_PlayChannel(-1, sound->GetSDLChunk(), 0);
 }
 
+void SDLRenderer::PlayMusic(std::shared_ptr<MyMusic> music)
+{
+    Mix_PlayMusic(music->GetSDLMusic(), -1);
+}
+
 std::shared_ptr<Texture> SDLRenderer::LoadTexture(std::string fileName)
 {
     Log("Loading texture: " + fileName, LOG_INFO);
@@ -201,4 +206,11 @@ std::shared_ptr<Sound> SDLRenderer::LoadSound(std::string fileName)
     Mix_Chunk *m = Mix_LoadWAV(fileName.c_str());
 
     return std::make_shared<Sound>(m);
+}
+
+std::shared_ptr<MyMusic> SDLRenderer::LoadMusic(std::string fileName)
+{
+    Mix_Music *m = Mix_LoadMUS(fileName.c_str());
+
+    return std::make_shared<MyMusic>(m);
 }

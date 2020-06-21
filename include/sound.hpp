@@ -13,4 +13,14 @@ public:
     Mix_Chunk *GetSDLChunk();
 };
 
+class MyMusic
+{
+private:
+    Mix_Music *Mus;
+
+public:
+    MyMusic(Mix_Music *mus);
+    Mix_Music *GetSDLMusic();
+};
+
 #endif // SOUND_H
