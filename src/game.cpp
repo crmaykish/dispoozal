@@ -184,7 +184,13 @@ void Game::Update()
             if (MainMenuSelectedButtonIndex == 0)
             {
                 // play casual
-                SelectedDifficulty = DIFFICULTY_CASUAL;
+                SelectedDifficulty = {
+                    DIFFICULTY_CASUAL,
+                    CASUAL_STARTING_RATE,
+                    CASUAL_MOVE_SPEED,
+                    CASUAL_RATE_INCREASE,
+                    CASUAL_RATE_MIN};
+
                 Reset();
                 State.Status = STATUS_RUNNING;
 
@@ -193,7 +199,13 @@ void Game::Update()
             else if (MainMenuSelectedButtonIndex == 1)
             {
                 // play normal
-                SelectedDifficulty = DIFFICULTY_NORMAL;
+                SelectedDifficulty = {
+                    DIFFICULTY_NORMAL,
+                    NORMAL_STARTING_RATE,
+                    NORMAL_MOVE_SPEED,
+                    NORMAL_RATE_INCREASE,
+                    NORMAL_RATE_MIN};
+
                 Reset();
                 State.Status = STATUS_RUNNING;
 
@@ -202,7 +214,13 @@ void Game::Update()
             else if (MainMenuSelectedButtonIndex == 2)
             {
                 // play insane
-                SelectedDifficulty = DIFFICULTY_INSANE;
+                SelectedDifficulty = {
+                    DIFFICULTY_INSANE,
+                    INSANE_STARTING_RATE,
+                    INSANE_MOVE_SPEED,
+                    INSANE_RATE_INCREASE,
+                    INSANE_RATE_MIN};
+
                 Reset();
                 State.Status = STATUS_RUNNING;
 
@@ -319,15 +337,27 @@ void Game::Update()
 
             LastDirection = dir;
 
-            e = std::make_shared<Enemy>(p, CreateBarrelAnimation(EnemyTexture));
+            e = std::make_shared<Enemy>(p, SelectedDifficulty.MoveSpeed, CreateBarrelAnimation(EnemyTexture));
             e->Direction = dir;
 
             Enemies.push_back(e);
 
             // Update rate as level increases
-            if (State.Score % 10 && State.Score < 80)
+            if (State.Score > 0 && State.Score % 5 == 0)
             {
-                FireTimer.SetTimeout(startingTimeout - State.Score * 10);
+                if (SelectedDifficulty.StartingRate <= SelectedDifficulty.RateTimeoutMin)
+                {
+                    // already at the fastest rate
+                    SelectedDifficulty.StartingRate = SelectedDifficulty.RateTimeoutMin;
+                }
+                else
+                {
+                    SelectedDifficulty.StartingRate -= SelectedDifficulty.RateIncrease;
+                }
+
+                FireTimer.SetTimeout(SelectedDifficulty.StartingRate);
+
+                Log(std::to_string(SelectedDifficulty.StartingRate));
             }
 
             FireTimer.Reset();
@@ -368,7 +398,7 @@ void Game::Update()
                         // Update best score
                         State.BestScore = State.Score;
 
-                        DB.AddScore(SelectedDifficulty, State.Score);
+                        DB.AddScore(SelectedDifficulty.Diff, State.Score);
                     }
                 }
 
@@ -385,7 +415,7 @@ void Game::Render()
     if (State.Status == STATUS_MENU)
     {
         // render title
-        Rectangle logoRect = {18 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4 + 120, 180*3 - 20, 100 * 2};
+        Rectangle logoRect = {18 * TEXTURE_SCALE * 4, 57 * TEXTURE_SCALE * 4 + 120, 180 * 3 - 20, 100 * 2};
         Renderer.RenderWholeTexture(MainLogo, logoRect);
 
         MainMenuAnimation.Render(Renderer, 590, 585);
@@ -480,13 +510,26 @@ void Game::Cleanup()
 void Game::Reset()
 {
     State.Score = 0;
-    State.BestScore = DB.GetHighScore(SelectedDifficulty);
+    State.BestScore = DB.GetHighScore(SelectedDifficulty.Diff);
+
+    if (SelectedDifficulty.Diff == DIFFICULTY_CASUAL)
+    {
+        SelectedDifficulty.StartingRate = CASUAL_STARTING_RATE;
+    }
+    else if (SelectedDifficulty.Diff == DIFFICULTY_NORMAL)
+    {
+        SelectedDifficulty.StartingRate = NORMAL_STARTING_RATE;
+    }
+    if (SelectedDifficulty.Diff == DIFFICULTY_INSANE)
+    {
+        SelectedDifficulty.StartingRate = INSANE_STARTING_RATE;
+    }
 
     State.BestScoreCasual = DB.GetHighScore(DIFFICULTY_CASUAL);
     State.BestScoreNormal = DB.GetHighScore(DIFFICULTY_NORMAL);
     State.BestScoreInsane = DB.GetHighScore(DIFFICULTY_INSANE);
 
-    FireTimer.SetTimeout(1000);
+    FireTimer.SetTimeout(SelectedDifficulty.StartingRate);
     FireTimer.Reset();
 
     Enemies.clear();

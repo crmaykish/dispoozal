@@ -19,13 +19,13 @@ enum EnemyDirection
 class Enemy : public GameObject
 {
 protected:
-    float MoveSpeed = 8.0;
+    float MoveSpeed = 0.0;
     std::shared_ptr<Animation> MainAnimation;
 
 public:
     EnemyDirection Direction;
 
-    Enemy(Point position, std::shared_ptr<Animation> animation);
+    Enemy(Point position, float speed, std::shared_ptr<Animation> animation);
 
     void Update(GameState &state) override;
     void Render(SDLRenderer &renderer) override;

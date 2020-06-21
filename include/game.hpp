@@ -16,11 +16,35 @@
 const double TICK_RATE = 60;
 const auto TIME_PER_TICK = std::chrono::duration<double>(1.0 / TICK_RATE);
 
+const int CASUAL_STARTING_RATE = 1200;
+const float CASUAL_MOVE_SPEED = 6.0;
+const int CASUAL_RATE_INCREASE = 25;
+const int CASUAL_RATE_MIN = 300;
+
+const int NORMAL_STARTING_RATE = 900;
+const float NORMAL_MOVE_SPEED = 8.0;
+const int NORMAL_RATE_INCREASE = 50;
+const int NORMAL_RATE_MIN = 250;
+
+const int INSANE_STARTING_RATE = 800;
+const float INSANE_MOVE_SPEED = 12.0;
+const int INSANE_RATE_INCREASE = 75;
+const int INSANE_RATE_MIN = 200;
+
 enum GameDifficulty
 {
     DIFFICULTY_CASUAL = 0,
     DIFFICULTY_NORMAL = 1,
     DIFFICULTY_INSANE = 2,
+};
+
+struct DifficultySettings
+{
+    GameDifficulty Diff;
+    int StartingRate;
+    float MoveSpeed;
+    int RateIncrease;
+    int RateTimeoutMin;
 };
 
 class Game
@@ -66,7 +90,7 @@ private:
     std::shared_ptr<Player> PlayerOne;
     std::vector<std::shared_ptr<Enemy>> Enemies;
 
-    GameDifficulty SelectedDifficulty = DIFFICULTY_NORMAL;
+    DifficultySettings SelectedDifficulty;
 
     GameTimer FireTimer;
     int startingTimeout = 1000;
