@@ -16,9 +16,9 @@
 const double TICK_RATE = 60;
 const auto TIME_PER_TICK = std::chrono::duration<double>(1.0 / TICK_RATE);
 
-const int CASUAL_STARTING_RATE = 900;
+const int CASUAL_STARTING_RATE = 1000;
 const float CASUAL_MOVE_SPEED = 3.0;
-const int CASUAL_RATE_INCREASE = 25;
+const int CASUAL_RATE_INCREASE = 20;
 const int CASUAL_RATE_MIN = 400;
 
 const int NORMAL_STARTING_RATE = 800;
