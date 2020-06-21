@@ -82,6 +82,7 @@ private:
     std::shared_ptr<Sound> FailSound;
     std::shared_ptr<Sound> ClickSound;
     std::shared_ptr<Sound> SelectSound;
+    std::shared_ptr<Sound> HighscoreSound;
 
     std::shared_ptr<MyMusic> SlowMusic;
     std::shared_ptr<MyMusic> MediumMusic;
@@ -98,6 +99,8 @@ private:
 
     bool MenuButtonDownLast = false;
     bool ModeSwitch = false;
+
+    bool HighscoreFlag = false;
 
     GameTimer CleanupTimer;
 

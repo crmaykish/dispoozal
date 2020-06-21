@@ -49,6 +49,7 @@ void Game::Init()
     FailSound = Renderer.LoadSound("assets/fail.wav");
     ClickSound = Renderer.LoadSound("assets/move.wav");
     SelectSound = Renderer.LoadSound("assets/select.wav");
+    HighscoreSound = Renderer.LoadSound("assets/highscore.mp3");
 
     // load music
     SlowMusic = Renderer.LoadMusic("assets/theme_120.mp3");
@@ -387,6 +388,12 @@ void Game::Update()
                     Renderer.PlaySound(SuccessSound);
 
                     State.Score++;
+
+                    if (!HighscoreFlag && State.BestScore != 0 && State.Score > State.BestScore)
+                    {
+                        Renderer.PlaySound(HighscoreSound);
+                        HighscoreFlag = true;
+                    }
                 }
                 else
                 {
@@ -511,6 +518,8 @@ void Game::Cleanup()
 
 void Game::Reset()
 {
+    HighscoreFlag = false;
+
     State.Score = 0;
     State.BestScore = DB.GetHighScore(SelectedDifficulty.Diff);
 
