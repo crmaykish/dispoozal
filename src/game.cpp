@@ -345,14 +345,16 @@ void Game::Update()
             // Update rate as level increases
             if (State.Score > 0 && State.Score % 5 == 0)
             {
-                if (SelectedDifficulty.StartingRate <= SelectedDifficulty.RateTimeoutMin)
+                if (SelectedDifficulty.StartingRate >= SelectedDifficulty.RateTimeoutMin + SelectedDifficulty.RateIncrease)
                 {
-                    // already at the fastest rate
-                    SelectedDifficulty.StartingRate = SelectedDifficulty.RateTimeoutMin;
+                    // speed up
+                    SelectedDifficulty.StartingRate -= SelectedDifficulty.RateIncrease;
                 }
                 else
                 {
-                    SelectedDifficulty.StartingRate -= SelectedDifficulty.RateIncrease;
+                    // already at fastest
+                    SelectedDifficulty.StartingRate = SelectedDifficulty.RateTimeoutMin;
+
                 }
 
                 FireTimer.SetTimeout(SelectedDifficulty.StartingRate);
